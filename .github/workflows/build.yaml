@@ -11,15 +11,15 @@ env:
   RESHADE_REPO: crosire/reshade
 
 jobs:
-  gather-env:
+  gather_env:
     name: Gather Environment
     runs-on: ubuntu-latest
 
     outputs:
-      reshade-version: ${{ steps.reshade.outputs.version }}
-      reshade-source: ${{ steps.reshade.outputs.source }}
-      vshade-version: ${{ steps.vshade.outputs.version }}
-      vshade-reshade: ${{ steps.vshade.outputs.reshade }}
+      reshade_version: ${{ steps.reshade.outputs.version }}
+      reshade_source: ${{ steps.reshade.outputs.source }}
+      vshade_version: ${{ steps.vshade.outputs.version }}
+      vshade_reshade: ${{ steps.vshade.outputs.reshade }}
 
     steps:
       - name: Get latest ReShade release
@@ -51,11 +51,11 @@ jobs:
           echo "version=$ver" >> "$GITHUB_OUTPUT"
           echo "reshade=$source" >> "$GITHUB_OUTPUT"
 
-  fetch-reshade:
+  fetch_reshade:
     name: Fetch and Build Reshade
     runs-on: windows-latest
-    needs: gather-env
-    if: gather-env.outputs.reshade-version  != gather-env.outputs.vshade-reshade
+    needs: gather_env
+    if: gather_env.outputs.reshade_version  != gather_env.outputs.vshade_reshade
 
     steps:
       - name: Temp
