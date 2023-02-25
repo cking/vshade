@@ -37,12 +37,14 @@ jobs:
       - name: Get latest VSHade release
         id: vshade
         run: |
-          rel=$(gh api --method GET /repos/$VSHADE_REPO/releases/latest)
-          if [ $? -ne 0 ]; then
+          has_releases = $(gh api --method GET /repos/cking/vshade/releases | jq ".|length")
+          if [ $has_releases -eq 0 ]; then
             echo version=0 >> "$GITHUB_OUTPUT"
             echo reshade=0 >> "$GITHUB_OUTPUT"
             exit 0
           fi
+
+          rel=$(gh api --method GET /repos/$VSHADE_REPO/releases/latest)
 
           name=$(echo $rel | jq -r .name)
           ver=$(echo $name | cut -d- -f1 | tr -d v)
