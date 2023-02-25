@@ -37,7 +37,7 @@ jobs:
       - name: Get latest VSHade release
         id: vshade
         run: |
-          rel=gh api --method GET /repos/$VSHADE_REPO/releases/latest
+          rel=$(gh api --method GET /repos/$VSHADE_REPO/releases/latest)
           if [ $? -ne 0 ]; then
             echo version=0 >> "$GITHUB_OUTPUT"
             echo reshade=0 >> "$GITHUB_OUTPUT"
