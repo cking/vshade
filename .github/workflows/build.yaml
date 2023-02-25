@@ -74,9 +74,7 @@ jobs:
           Move-Item -Path "crosire-reshade-*" -Destination "reshade" -Force
 
       - name: Patch ReShade
-        run: |
-          cd reshade
-          git.exe apply ../reshade-patches/unlock.patch
+        run: (Get-Content "reshade/source/runtime.cpp").Replace("#if RESHADE_ADDON_LITE", "#if false") | Set-Content "reshade/source/runtime.cpp"
 
       - name: Build ReShade
         run: |
