@@ -55,7 +55,7 @@ jobs:
     name: Fetch and Build Reshade
     runs-on: windows-latest
     needs: gather_env
-    if: ${{ gather_env.outputs.reshade_version != gather_env.outputs.vshade_reshade }}
+    if: needs.gather_env.outputs.reshade_version != needs.gather_env.outputs.vshade_reshade
 
     steps:
       - name: Temp
