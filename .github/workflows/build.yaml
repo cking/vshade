@@ -30,7 +30,7 @@ jobs:
           ver=$(echo $tag | jq -r .name | tr -d v)
           source=$(echo $tag | jq -r .zipball_url)
 
-          echo Found ReShade $ver ( $source )
+          echo "Found ReShade $ver ( $source )"
           echo "version=$ver" >> "$GITHUB_OUTPUT"
           echo "source=$source" >> "$GITHUB_OUTPUT"
 
@@ -48,7 +48,7 @@ jobs:
           ver=$(echo $name | cut -d- -f1 | tr -d v)
           reshade=$(echo $name | cut -d- -f2)
 
-          echo Found VSHade $ver ( $reshade )
+          echo "Found VSHade $ver ( $reshade )"
           echo "version=$ver" >> "$GITHUB_OUTPUT"
           echo "reshade=$source" >> "$GITHUB_OUTPUT"
 
