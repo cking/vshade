@@ -71,6 +71,12 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "${{ needs.gather_env.outputs.reshade_source }}" -OutFile reshade.zip
           Expand-Archive -Path reshade.zip -DestinationPath . -Force
+          Move-Item -Path "crosire-reshade-*" -Destination "reshade" -Force
 
       - name: Patch ReShade
-        run: ls
+        working-directory: reshade
+        run: git.exe apply ../reshade-patches/unlock.patch
+
+      - name: Build ReShade
+        working-directory: reshade
+        run: msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
