@@ -9,6 +9,7 @@ on:
 env:
   VSHADE_REPO: cking/vshade
   RESHADE_REPO: crosire/reshade
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   gather_env:
