@@ -3,7 +3,7 @@ name: Build VSHade
 on:
   schedule:
     - cron: 5 2 * * *
-
+  push:
   workflow_dispatch:
 
 env:
@@ -55,7 +55,7 @@ jobs:
     name: Fetch and Build Reshade
     runs-on: windows-latest
     needs: gather_env
-    if: gather_env.outputs.reshade_version  != gather_env.outputs.vshade_reshade
+    if: ${{ gather_env.outputs.reshade_version != gather_env.outputs.vshade_reshade }}
 
     steps:
       - name: Temp
