@@ -61,5 +61,16 @@ jobs:
     if: needs.gather_env.outputs.reshade_version != needs.gather_env.outputs.vshade_reshade
 
     steps:
-      - name: Temp
-        run: echo temp
+      - name: Checkout VSHade
+        uses: actions/checkout@v3
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+
+      - name: Fetch ReShade source
+        run: |
+          Invoke-WebRequest -Uri "${{ needs.gather_env.outputs.reshade_source }}" -OutFile reshade.zip
+          Expand-Archive -Path reshade.zip -DestinationPath . -Force
+
+      - name: Patch ReShade
+        run: ls

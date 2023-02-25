@@ -1,0 +1,11 @@
+--- a/source/runtime.cpp	2023-01-15 22:58:53.000000000 +0100
++++ b/source/runtime.cpp	2023-02-25 13:23:17.068550149 +0100
+@@ -758,7 +758,7 @@
+ 	if (!ini_file::flush_cache())
+ 		_preset_save_successfull = false;
+ 
+-#if RESHADE_ADDON_LITE
++#if false
+ 	// Detect high network traffic
+ 	extern volatile long g_network_traffic;
+ 
