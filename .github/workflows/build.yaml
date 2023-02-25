@@ -74,9 +74,11 @@ jobs:
           Move-Item -Path "crosire-reshade-*" -Destination "reshade" -Force
 
       - name: Patch ReShade
-        working-directory: reshade
-        run: git.exe apply ../reshade-patches/unlock.patch
+        run: |
+          cd reshade
+          git.exe apply ../reshade-patches/unlock.patch
 
       - name: Build ReShade
-        working-directory: reshade
-        run: msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
+        run: |
+          cd reshade
+          msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
