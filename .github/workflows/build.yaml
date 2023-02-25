@@ -28,7 +28,7 @@ jobs:
         run: |
           tag=$(gh api --method GET /repos/$RESHADE_REPO/tags | jq .[0])
           ver=$(echo $tag | jq -r .name | tr -d v)
-          source=$(echo $tag | jq -r .zipball_url)
+          source=$(echo $tag | jq -r .commit.sha)
 
           echo "Found ReShade $ver ( $source )"
           echo "version=$ver" >> "$GITHUB_OUTPUT"
@@ -61,22 +61,18 @@ jobs:
     if: needs.gather_env.outputs.reshade_version != needs.gather_env.outputs.vshade_reshade
 
     steps:
-      - name: Checkout VSHade
+      - name: Checkout ReShade
         uses: actions/checkout@v3
+        with:
+          repository: ${{ env.RESHADE_REPO }}
+          ref: ${{ needs.gather_env.outputs.reshade_source }}
+          submodules: true
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1
 
-      - name: Fetch ReShade source
-        run: |
-          Invoke-WebRequest -Uri "${{ needs.gather_env.outputs.reshade_source }}" -OutFile reshade.zip
-          Expand-Archive -Path reshade.zip -DestinationPath . -Force
-          Move-Item -Path "crosire-reshade-*" -Destination "reshade" -Force
-
       - name: Patch ReShade
-        run: (Get-Content "reshade/source/runtime.cpp").Replace("#if RESHADE_ADDON_LITE", "#if false") | Set-Content "reshade/source/runtime.cpp"
+        run: (Get-Content "source/runtime.cpp").Replace("#if RESHADE_ADDON_LITE", "#if false") | Set-Content "source/runtime.cpp"
 
       - name: Build ReShade
-        run: |
-          cd reshade
-          msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
+        run: msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
