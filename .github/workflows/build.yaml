@@ -76,3 +76,9 @@ jobs:
 
       - name: Build ReShade
         run: msbuild.exe ReShade.sln /p:configuration=Release /p:platform=64-bit
+
+      - name: Store ReShade artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ReShade64.dll
+          path: bin\x64\Release\ReShade64.dll
