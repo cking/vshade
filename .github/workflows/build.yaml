@@ -1,0 +1,62 @@
+name: Build VSHade
+
+on:
+  schedule:
+    - cron: 5 2 * * *
+
+  workflow_dispatch:
+
+env:
+  VSHADE_REPO: cking/vshade
+  RESHADE_REPO: crosire/reshade
+
+jobs:
+  gather-env:
+    name: Gather Environment
+    runs-on: ubuntu-latest
+
+    outputs:
+      reshade-version: ${{ steps.reshade.outputs.version }}
+      reshade-source: ${{ steps.reshade.outputs.source }}
+      vshade-version: ${{ steps.vshade.outputs.version }}
+      vshade-reshade: ${{ steps.vshade.outputs.reshade }}
+
+    steps:
+      - name: Get latest ReShade release
+        id: reshade
+        run: |
+          tag=$(gh api --method GET /repos/$RESHADE_REPO/tags | jq .[0])
+          ver=$(echo $tag | jq -r .name | tr -d v)
+          source=$(echo $tag | jq -r .zipball_url)
+
+          echo Found ReShade $ver ( $source )
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+
+      - name: Get latest VSHade release
+        id: vshade
+        run: |
+          rel=gh api --method GET /repos/$VSHADE_REPO/releases/latest
+          if [ $? -ne 0 ]; then
+            echo version=0 >> "$GITHUB_OUTPUT"
+            echo reshade=0 >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          name=$(echo $rel | jq -r .name)
+          ver=$(echo $name | cut -d- -f1 | tr -d v)
+          reshade=$(echo $name | cut -d- -f2)
+
+          echo Found VSHade $ver ( $reshade )
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "reshade=$source" >> "$GITHUB_OUTPUT"
+
+  fetch-reshade:
+    name: Fetch and Build Reshade
+    runs-on: windows-latest
+    needs: gather-env
+    if: gather-env.outputs.reshade-version  != gather-env.outputs.vshade-reshade
+
+    steps:
+      - name: Temp
+        run: echo temp
